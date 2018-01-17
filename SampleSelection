@@ -1,0 +1,61 @@
+Sub SampleSelectionMacroInprove()
+
+  
+'The block of code inserts filters and sort the specified column in descending order
+
+    Set Total = Application.InputBox(Prompt:="Select the column with transaction total", Type:=8)
+    Total.Insert Shift:=xlToRight
+    Cells(1, Total.Column - 1).Value = "Selection"
+    
+    ActiveSheet.Range("A1", Range("A1").End(xlToRight).End(xlDown)).Select
+    Selection.AutoFilter
+
+    ActiveSheet.AutoFilter.Sort.SortFields.Clear
+    ActiveSheet.AutoFilter.Sort.SortFields.Add Key:= _
+        Range(Cells(1, Total.Column), Cells(1, Total.Column).End(xlDown)), SortOn:=xlSortOnValues, Order:=xlDescending, DataOption _
+        :=xlSortNormal
+    With ActiveSheet.AutoFilter.Sort
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+
+'VBA to make random Selection
+    Dim LowNo As Long
+    Dim c As Range
+    Dim HighNo As Long
+    Dim Amount As Long
+    
+    LowNo = 2
+    HighNo = Application.InputBox(Prompt:="Please enter the sample range", Type:=2)
+    Amount = Application.InputBox(Prompt:="Please enter the sample size", Type:=2)
+    Dim FillRange As Range
+    Set FillRange = Range("EF2").Resize(Amount)
+    FillRange.ClearContents
+    
+    For Each c In FillRange
+        Do
+        c.Value = Int((HighNo * Rnd) + LowNo)
+        Loop Until WorksheetFunction.CountIf(FillRange, c.Value) < 2
+    Next
+    
+    For Each c In FillRange
+        Cells(c.Value, Total.Column - 1).Value = 1
+    Next
+    
+'need to make field dynamic
+
+    Cells.AutoFilter Field:=Total.Column - 1, Criteria1:="<>"
+    Range("A1", Range("A1").End(xlToRight).End(xlDown)).Select
+    Selection.Copy
+    Workbooks.Add
+    Range("A8").Select
+    ActiveSheet.Paste
+        
+
+        
+End Sub
+
+
