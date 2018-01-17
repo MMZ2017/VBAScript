@@ -1,0 +1,40 @@
+Sub CombineIntoMaster()
+    Dim wrk As Workbook
+    Dim sht As Worksheet
+    Dim trg As Worksheet
+    Dim start As Long
+    Dim rng As Range
+    Dim rowCount As Long
+    Dim colCount As Long
+    
+    Set wrk = ActiveWorkbook
+    
+    For Each sht In wrk.Worksheets
+        If sht.Name = "master" Then
+            sht.Delete
+            Exit For
+        End If
+    Next sht
+    
+    Set trg = wrk.Worksheets.Add(After:=wrk.Worksheets(wrk.Worksheets.Count))
+    trg.Name = "master"
+    trg.Cells(1, 1).Resize(1, 3).Value = wrk.Worksheets(1).Cells(2, 1).Resize(1, 3).Value
+ 
+    start = 1
+    For Each sht In wrk.Worksheets
+        If sht.Name = "master" Then
+            Exit For
+        End If
+    'Start from row 10000 and go all the way up, return the row number of the first non-blank cell
+        rowCount = sht.Cells(20000, 1).End(xlUp).Row
+        colCount = sht.Cells(3, 10000).End(xlToLeft).Column
+        Set rng = sht.Range(sht.Cells(3, 1), sht.Cells(rowCount, colCount))
+        trg.Cells(start + 1, 1).Resize(rng.Rows.Count, rng.Columns.Count).Value = rng.Value
+        trg.Cells(start + 1, colCount + 1).Resize(rng.Rows.Count, 1).Value = sht.Name
+        
+        start = start + rowCount - 2
+    Next sht
+    
+    trg.Columns.AutoFit
+    
+End Sub
