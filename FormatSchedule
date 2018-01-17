@@ -1,0 +1,21 @@
+Sub FormatSchedule()
+    Dim firstRow As Long
+    Dim lastRow As Long
+    Dim firstCol As Long
+    Dim lastCol As Long
+    Dim i As Long
+    
+    
+    firstRow = Selection.Row
+    lastRow = firstRow + Selection.Rows.Count - 1
+    firstCol = Selection.Column
+    lastCol = firstCol + Selection.Columns.Count - 1
+    
+    Range(Cells(firstRow, firstCol), Cells(firstRow, lastCol)).NumberFormat = "_($#,##0_);_($(#,##0);_($ ""-""_);_(@_)"
+    Range(Cells(lastRow, firstCol), Cells(lastRow, lastCol)).NumberFormat = "_($#,##0_);_($(#,##0);_($ ""-""_);_(@_)"
+
+    For i = firstRow + 1 To lastRow - 1
+        Range(Cells(i, firstCol), Cells(i, lastCol)).NumberFormat = "_(* #,##0_);_(* (#,##0);_(* ""-""_);_(@_)"
+    Next i
+    
+End Sub
