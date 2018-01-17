@@ -1,0 +1,42 @@
+Sub Reage()
+
+    Dim Cutoff As Date
+    Dim LastRo As Long
+    Set Invdate = Application.InputBox(Prompt:="Select the Invoice Date column", Type:=8)
+        Invdate.Insert Shift:=xlToRight
+        Invdate.Insert Shift:=xlToRight
+        Invdate.Insert Shift:=xlToRight
+        Cells(1, Invdate.Column - 1).Value = "Lag"
+        Cells(1, Invdate.Column - 2).Value = "Reaging Buckets"
+        Cells(1, Invdate.Column - 3).Value = "Cut off"
+        'Make the inserted cells purple
+        Range(Cells(1, Invdate.Column - 1), Cells(1, Invdate.Column - 3)).Interior.Color = RGB(200, 150, 250)
+        Cutoff = Application.InputBox(Prompt:="Input the cutoff date", Type:=2)
+        LastRo = Cells(1, Invdate.Column).End(xlDown).Row
+        
+        Cells(2, Invdate.Column - 3).Value = Cutoff
+        Cells(2, Invdate.Column - 3).NumberFormat = "m/d/yyyy"
+        Cells(2, Invdate.Column - 1).FormulaR1C1 = "=RC[-2]-RC[1]"
+        Cells(2, Invdate.Column - 2).FormulaR1C1 = _
+            "=IF(RC[1]<=30,""0-30 PID"",IF(RC[1]<=60,""31-60 PID"",IF(RC[1]<=90,""61-90 PID"",""> 90 PID"")))"
+        Range(Cells(2, Invdate.Column - 3), Cells(2, Invdate.Column - 1)).Copy
+        Range(Cells(2, Invdate.Column - 3), Cells(LastRo, Invdate.Column - 1)).PasteSpecial
+        'insert pivot table
+    Set rng = ActiveSheet.Range("A1", Range("A1").End(xlToRight).End(xlDown))
+        Sheets.Add
+        ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+            rng, Version:=xlPivotTableVersion14).CreatePivotTable _
+            TableDestination:=ActiveSheet.Cells(3, 1), TableName:="PivotTable1", DefaultVersion _
+            :=xlPivotTableVersion14
+        ActiveSheet.Name = "Pivot"
+        
+        With ActiveSheet.PivotTables("PivotTable1").PivotFields("Reaging Buckets")
+            .Orientation = xlColumnField
+            .Position = 1
+        End With
+
+        ActiveSheet.PivotTables("PivotTable1").PivotFields("Reaging Buckets"). _
+            PivotItems("> 90 PID").Position = 4
+        
+
+End Sub
