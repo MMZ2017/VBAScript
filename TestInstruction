@@ -1,0 +1,55 @@
+Sub TestInstruction()
+
+'Below is the block of code which ask the user for the type of test and then paste the instructions to the selection
+
+Dim TestType As String
+TestType = Application.InputBox(Prompt:= _
+"Invoice Test, Cash Application Test, Credit Memo Test, Cost Test, Test Count, Gross Profit Test, Vendor Payment Test, Intransit Test or Other", _
+Type:=2)
+    If TestType = "Invoice Test" Then
+        ActiveSheet.Range("A2").Value = "For each selected item in the Invoice Test, please provide:"
+        Range("A3").Value = "1) Sales invoice"
+        Range("A4").Value = "2) Purchase order"
+        Range("A5").Value = "3) Proof of Delivery (e.g. BOL, documents signed by customer confirming receipt of goods)"
+        Range("A6").Value = "4) Copy of checks or wire transfer info and remittance advice if paid"
+    ElseIf TestType = "Cash Application Test" Then
+        ActiveSheet.Range("A2").Value = "For each selected item in the Cash Application Test, please provide:"
+        Range("A3").Value = "1) Copy of checks or wire transfer information"
+        Range("A4").Value = "2) remittance advice"
+        Range("A5").Value = "3) Sales invoices (if a customer payment is related to multiple invoices, just provide the largest amount in the group"
+        Range("A6").Value = "4) Date payment applied to A/R (if different from the date in the cash receipt journal)"
+    ElseIf TestType = "Credit Memo Test" Then
+        ActiveSheet.Range("A2").Value = "For each selected item in the Credit Memo Test, please provide:"
+        Range("A3").Value = "1) credit memo"
+        Range("A4").Value = "2) original invoice"
+        Range("A5").Value = "3) rebilled invoice if applicable"
+        Range("A6").Value = "4) reason for the credit memos"
+    ElseIf TestType = "Cost Test" Then
+        ActiveSheet.Range("A2").Value = "For each selected item in the Cost Test, please provide:"
+        Range("A3").Value = "1) Copy of most recent third-party vendor invoice"
+        Range("A4").Value = "2) Freight bills, customs bills, and backup of any other costs capitalized into the inventory"
+        Range("A5").Value = "3) Copy of most recent sales invoice"
+    ElseIf TestType = "Vendor Payment Test" Then
+        ActiveSheet.Range("A2").Value = "For each selected item in the Vendor Payment Test, please provide:"
+        Range("A3").Value = "1) copy of vendor invoice (if a payment is related to multiple invoices, just provide the largest vendor invoice in the group)"
+        Range("A4").Value = "2) remittance advice"
+        Range("A5").Value = "3) copy of checks or wire transfer information"
+    ElseIf TestType = "Gross Profit Margin" Then
+        ActiveSheet.Range("A2").Value = "For the Gross Marging Test, Please provide sales invoice for each selected inventory item"
+    ElseIf TestType = "Test Count" Then
+        ActiveSheet.Range("A2").Value = "Test Count Selection"
+    ElseIf TestType = "Intransit Test" Then
+        ActiveSheet.Range("A2").Value = "For each selection item in the Intransit inventory test, please provide:"
+        Range("A3").Value = "1) Purchase order"
+        Range("A4").Value = "2) Proof of shipment"
+        Range("A5").Value = "3) Vendor Invoice"
+        Range("A6").Value = "4) Warehouse Receiving Report"
+        Range("A7").Value = "5) copy of check or wire information to show proof of payment to the vendor if paid"
+    Else
+        ActiveSheet.Range("A2").Value = TestType & " Selection"
+        Range("A3").Value = "Please enter the title and required backup for the test"
+    End If
+
+End Sub
+
+
